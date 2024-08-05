@@ -15,8 +15,32 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf.urls.static import static
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView 
+from pokemon_api import settings
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('pokemon-admin/', admin.site.urls),
+] 
+
+urlpatterns_api = [
+    path("api/", include([  
+    ]))
 ]
+
+urlpatterns_swagger = [
+    # YOUR PATTERNS
+    # Optional UI:
+    # YOUR PATTERNS 
+    path('docs/schema/', SpectacularAPIView.as_view(), name='schema'),
+    # Optional UI:
+    path('docs/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema', template_name='swagger-ui.html'), name='swagger-ui'),
+    path('docs/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+]
+
+urlpatterns += urlpatterns_api + urlpatterns_swagger 
+
+# Check if local settings are imported
+if settings.MEDIA_URL and settings.MEDIA_ROOT:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

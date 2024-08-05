@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
+import os, datetime
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,9 +37,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pokemon_api',
+
+    'rest_framework', 
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -47,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'pokemon_api.middleware.LoggingMiddleware', 
+    'pokemon_api.middleware.ResponseHandler',
 ]
 
 ROOT_URLCONF = 'pokemon_api.urls'
@@ -54,7 +63,10 @@ ROOT_URLCONF = 'pokemon_api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, "templates"),
+            os.path.join(BASE_DIR, "../templates"),
+        ], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -116,8 +128,155 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'media')
+]
+ 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=3),
+    'JWT_ALLOW_REFRESH': True
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ), 
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+    'COERCE_DECIMAL_TO_STRING': False,
+    'DEFAULT_PAGINATION_CLASS': 'pokemon_api.pagination.CustomPagination',
+    'PAGE_SIZE': 10,
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'pokemon_api.exception.custom_exception_handler'
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Pokemon API',
+    'DESCRIPTION': 'Core API business management and services. ',
+    'CONTACT': {},
+    'LICENSE': {},
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'EXTERNAL_DOCS': {},
+    'EXTENSIONS_INFO': {},
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+    'SERVE_AUTHENTICATION': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'SWAGGER_UI_SETTINGS': {
+        'deepLinking': True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+    },
+    'SWAGGER_UI_DIST': 'SIDECAR',  # shorthand to use the sidecar instead
+    'SWAGGER_UI_FAVICON_HREF': 'SIDECAR',
+    'REDOC_DIST': 'SIDECAR',
+    'ENUM_ADD_EXPLICIT_BLANK_NULL_CHOICE': True,
+    'CAMELIZE_NAMES': False,
+
+    'APPEND_COMPONENTS': {
+        'securitySchemes': {
+            'bearerAuthTraxion': {
+                'type': 'http',
+                'scheme': 'bearer',
+                'bearerFormat': 'JWT',
+                'name': 'Authorization',
+                'in': 'header'
+            },
+        },
+    },
+    'POSTPROCESSING_HOOKS': [
+        'drf_spectacular.hooks.postprocess_schema_enums',
+    ],
+    'SORT_OPERATIONS': False,
+    'SORT_OPERATION_PARAMETERS': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    # OTHER SETTINGS
+}
+APPEND_SLASH = False 
+
+# ----------- Configs ------------------
+CORS_ALLOW_ALL_ORIGINS = False 
+PROJECT_ENVIRONMENT = 'dev'
+
+try:
+    from pokemon_api.local import *
+except:
+    pass
+
+# LOGGING SETTINGS
+LOGGING = { 
+    'version': 1,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+        'custom':{
+            'format':"API [%(levelname)s] %(asctime)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s"
+        },
+    }, 
+    'handlers': {
+        'logging_handler':{
+            'class':'pokemon_api.logger.CustomFileHandler',
+            'level': 'WARNING' if PROJECT_ENVIRONMENT == 'production' else 'DEBUG',
+            'formatter': 'custom',
+            'maxBytes': 31457280,  # 1024 * 1024 * 30B = 30MB
+            'backupCount': 5,
+            'filename':'logs/api.log',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'custom'
+        },  
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logging_handler', 'console'],
+            'level': 'WARNING' if PROJECT_ENVIRONMENT == 'production' else 'DEBUG',
+            'propagate': True,
+        },
+        'django.db.backends': { 
+            'handlers': ['console'],
+            'level': 'WARNING',   # DEBUG will log all queries, so change it to WARNING.
+            'propagate': False,   # Don't propagate to other handlers
+        },
+        'django.utils.autoreload': {
+            'handlers': ['console'],
+            'level': 'WARNING',   # DEBUG will log all queries, so change it to WARNING.
+            'propagate': False,   # Don't propagate to other handlers
+        },
+        'django.template': {
+            'handlers': ['console'],
+            'level': 'WARNING',   # DEBUG will log all queries, so change it to WARNING.
+            'propagate': False,   # Don't propagate to other handlers
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'WARNING',   # DEBUG will log all queries, so change it to WARNING.
+            'propagate': False,   # Don't propagate to other handlers
+        },
+        'django.server': {
+            'handlers': ['console'],
+            'level': 'INFO',   # DEBUG will log all queries, so change it to WARNING.
+            'propagate': False,   # Don't propagate to other handlers
+        }, 
+    }
+}

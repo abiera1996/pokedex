@@ -19,10 +19,11 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView 
 from pokedex import settings
-
+ 
 urlpatterns = [
-    path('pokemon-admin/', admin.site.urls),
-] 
+    path('admin/', admin.site.urls),
+    path('', include('app_web.urls')),
+]
 
 urlpatterns_api = [
     path("api/", include([  

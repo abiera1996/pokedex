@@ -1,5 +1,5 @@
 """
-URL configuration for pokemon_api project.
+URL configuration for pokedex project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.0/topics/http/urls/
@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView 
-from pokemon_api import settings
+from pokedex import settings
 
 urlpatterns = [
     path('pokemon-admin/', admin.site.urls),

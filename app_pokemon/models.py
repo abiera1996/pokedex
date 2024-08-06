@@ -14,7 +14,8 @@ class Ability(models.Model):
     
 class Pokemon(models.Model):
     name = models.CharField(max_length=100)
-    photo = models.URLField()
+    default_photo = models.URLField(default='')
+    photo = models.ImageField()
     types = models.ManyToManyField(Type)
     abilities = models.ManyToManyField(Ability)
     height = models.FloatField()

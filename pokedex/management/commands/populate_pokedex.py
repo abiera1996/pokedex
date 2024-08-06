@@ -5,10 +5,12 @@ from app_pokemon.models import (
     Type, 
     Ability
 )
+from django.core.files.base import ContentFile
+
 
 class Command(BaseCommand):
-    help = 'Fetch and store Pokémon data from the PokeAPI'
-
+    help = 'Fetch and store Pokémon data from the PokeAPI' 
+ 
     def handle(self, *args, **kwargs):
         url = 'https://pokeapi.co/api/v2/pokemon?limit=151'
         response = requests.get(url)
@@ -31,10 +33,10 @@ class Command(BaseCommand):
 
             pokemon, created = Pokemon.objects.get_or_create(
                 name=pokemon_data['name'],
-                photo=pokemon_data['sprites']['front_default'],
+                default_photo=pokemon_data['sprites']['front_default'],
                 height=pokemon_data['height'],
                 weight=pokemon_data['weight']
-            )
+            ) 
             pokemon.types.set(types)
             pokemon.abilities.set(abilities)
             pokemon.save()

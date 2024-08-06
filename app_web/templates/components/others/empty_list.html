@@ -1,0 +1,21 @@
+
+{% comment %}
+    Variables
+    - image
+    - icon
+    - message
+{% endcomment %}
+
+<div class="w-full h-full grid place-items-center">
+    <div>
+        {% if icon %}
+            <i class="{{icon}} text-[38px]"></i>
+        {% else %}
+            <img src="{{image}}" class="w-40 h-40 object-contain"/>
+        {% endif %}
+        
+    </div>
+    <div class="text-black text-sm">
+        {{message}}
+    </div>
+</div>

@@ -1,2 +1,38 @@
+{% extends 'base/base.html' %}
+
 {% block content %}
+<div class="container">
+    <h1 class="my-4">{{ details.name | capfirst }}</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{% if details.photo %}{{ details.photo }}{% else %}{{ details.default_photo }}{% endif %}" alt="{{ details.name }}" class="img-fluid">
+        </div>
+        <div class="col-md-8">
+            <h2>Details</h2>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>ID:</strong> {{ id }}</li>
+                <li class="list-group-item"><strong>Name:</strong> {{ details.name | capfirst }}</li>
+                <li class="list-group-item"><strong>Height:</strong> {{ details.height }} m</li>
+                <li class="list-group-item"><strong>Weight:</strong> {{ details.weight }} kg</li>
+            </ul>
+            <h3 class="mt-4">Types</h3>
+            <ul class="list-group">
+                {% for type in details.types.all %}
+                    <li class="list-group-item">{{ type.name | capfirst }}</li>
+                {% endfor %}
+            </ul>
+            <h3 class="mt-4">Abilities</h3>
+            <ul class="list-group">
+                {% for ability in details.abilities.all %}
+                    <li class="list-group-item">{{ ability.name | capfirst }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <a href="{% url 'web:pokemon' %}" class="btn btn-primary mt-4">Back to List</a>
+</div>
+{% endblock %}
+
+{% block javascript %}
+ 
 {% endblock %}

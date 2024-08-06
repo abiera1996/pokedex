@@ -4,6 +4,8 @@ from utils.decorators import (
     require_logged,
     require_not_logged
 )
+from app_pokemon.models import Pokemon
+from django.shortcuts import get_object_or_404
 
 
 @require_not_logged
@@ -32,9 +34,11 @@ def pokemon(request):
 
 @require_logged()
 def pokemon_details(request, id):  
+    details = get_object_or_404(Pokemon, pk=id)
     context = {
         'title': 'Pokedex',
-        'id': id
+        'id': id,
+        'details': details
     } 
     return render(request, template_name='screens/user/pokemon_details.html', context=context)
 

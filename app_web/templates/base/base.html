@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,11 +7,26 @@
     <title>{{title}}</title>
     {% block css %}
     {% endblock %}
+    <script src="{% static 'js/jquery-3.6.3.min.js' %}"></script>
 </head>
 <body>
     {% block content %}
     {% endblock %}
 
+    {% block modals %}
+        <section>
+            {% include 'components/modals/modal_general.html' %}
+            {% include 'components/modals/modal_rounded.html' %} 
+            
+        </section>
+    {% endblock %}
+    <script src="{% static 'js/global.js' %}"></script>
+    <script src="{% static 'plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
+    <script src="{% static 'js/axios.min.js' %}"></script>
+    <script src="{% static 'js/api_request.js' %}"></script> 
+    <script>
+        setupAxios("{{csrf_token}}")
+    </script>
     {% block javascript %}
     {% endblock %}
 </body>

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'pokedex',
     'app_pokemon',
     'app_web',
+    'utils',
     
     'rest_framework', 
     'drf_spectacular',

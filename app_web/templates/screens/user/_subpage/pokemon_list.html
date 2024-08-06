@@ -1,0 +1,42 @@
+{% load static %} 
+<div class="flex flex-wrap">
+    {% for data in data_list.data %}
+    <div class="w-full lg:w-[33.3%] 3xl:w-[25%] p-2">
+        <div class="w-full bg-white h-full py-3 px-4 rounded-xl flex flex-col xl:flex-row items-center">
+            <div class="w-28 h-28">
+                <img src="{{data.image}}" class="object-cover w-full h-full rounded-full"/>
+            </div>
+            <div class="flex-1 pl-3">
+                <div class="items-center">
+                    <div class="font-bold text-lg pr-5">
+                        {{data.name}}  
+                    </div>
+                     
+                </div>
+               
+                <div class="flex">
+                    <div class="w-fit mt-3 mr-2">
+                        {% url 'web:pokemon_details' data.pk as pokemon_details %}
+                        <a href="{{pokemon_details}}">
+                            View Details
+                        </a>   
+                    </div>
+                    <div class="w-fit mt-3"> 
+                        <button class="delete-pokemon" data-id="{{data.pk}}">
+                            Delete
+                        </button>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %} 
+        {% static 'image/empty-pokeball.png' as empty_image %}
+        {% include 'components/others/empty_list.html' with image=empty_image message="No pakemon to show." %}
+    {% endfor %}
+</div>
+
+<div>
+{% include 'components/pagination/pagination.html' with page_data=data_list paginate_object="system user" limit=data_list.limit %}
+</div>
+ 

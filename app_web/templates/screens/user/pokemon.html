@@ -1,2 +1,76 @@
+{% extends 'base/base.html' %}
+
 {% block content %}
+<div> 
+    <input type="text" placeholder="Search" name="filter_search"/> 
+    <div id="list-container"> </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function(e){
+        loadDataList();  
+
+        $(document).on("click", "#list-container .paginate-navigator", function(e){
+            e.preventDefault();
+            loadDataList($(this).data("page"));
+        });
+    })
+    
+    $("input[name=filter_search]").on("input", debounced(500, function(e){
+        loadDataList();
+    }));
+
+    function loadDataList(filter_page=1){
+        var filter_search = $("input[name=filter_search]").val() || ""; 
+        var filter_limit = 12; 
+
+        var query_params = urlParameterize({
+            "search": filter_search,
+            "page": filter_page,
+            "limit": filter_limit
+        });
+        console.log(query_params)
+        $("#list-container").loadSubpage({
+            url: "{% url 'web:subpage_pokemon_list' %}?"+query_params,
+        });
+    }
+
+    $(document).on("click", ".delete-pokemon", function(e){
+        const id = $(this).data('id')
+        
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will remove the pokemon in the pokedex permanently",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+            API.makeRequest(
+                `/ajax/delete-pokemon-request/${id}`,
+                'delete',
+                {},
+                processData=() => {},
+                callback=(response)=>{
+                    Swal.fire({
+                        icon: [200,201].includes(response.status)?'success':'error',
+                        title: 'Message',
+                        text: response.message || response.data?.message,
+                        timer: 3000
+                    }).then(()=>{
+                        if([200,201].includes(response.status)){
+                            loadDataList();
+                        }
+                    })
+                }
+            )
+        }
+        })
+    });
+    
+</script>
 {% endblock %}

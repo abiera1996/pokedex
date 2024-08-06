@@ -114,8 +114,9 @@ class APIRequest {
     // For small post body request like updating status, deletion etc
     // When making request make sure the data is ready and validated
     // For edit and creation form we can use the formRequest
-    async makePostRequest(
+    async makeRequest(
         url, 
+        method,
         data, 
         processData=()=>{}, 
         callback=()=>{}, 
@@ -126,10 +127,12 @@ class APIRequest {
             ...data,
             ...process_data
         } 
-        const response = await axios.post(
-            url, 
-            alldata
-        )
+
+        const response = await axios({
+            method,
+            url,
+            data: alldata
+          }); 
         callback(response) 
     }
 

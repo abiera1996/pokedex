@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'app_web',
     'utils',
     
+    'tailwind',
+    'tailwind_theme',
+    'django_browser_reload',
     'rest_framework', 
     'drf_spectacular',
     'drf_spectacular_sidecar',
@@ -59,9 +62,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'pokedex.middleware.LoggingMiddleware', 
     'pokedex.middleware.ResponseHandler',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'pokedex.urls'
+TAILWIND_APP_NAME = 'tailwind_theme'
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 TEMPLATES = [
     {

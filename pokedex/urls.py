@@ -21,6 +21,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 from pokedex import settings
  
 urlpatterns = [
+    path("__reload__/", include("django_browser_reload.urls")),
     path('admin/', admin.site.urls),
     path('', include('app_web.urls')),
 ]

@@ -1,11 +1,31 @@
+{% extends 'base/auth_base.html' %}
 {% block content %}
-<form>
-    <input name="first_name" type="text"/>
-    <input name="last_name" type="text"/>
-    <input name="email" type="email"/>
-    <input name="username" type="text"/>
-    <input name="password" type="password"/>
-    <input name="repassword" type="password"/>
+<form id="form-register" action="{% url 'web:register_request' %}">
+    <input name="first_name" placeholder="First Name" type="text" required/>
+    <input name="last_name" placeholder="Last Name" type="text" required/> 
+    <input name="username" placeholder="Username" type="text" required/>
+    <input name="password" placeholder="Passsword" type="password" required/>
+    <input name="repassword" placeholder="Confirm Password" type="password" required/>
     <input type="submit" value="Register"/>
 </form>
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+    API.formRequest(
+        '#form-register',
+        extended_data={},
+        processData=() => {},
+        checkValidation=(form_data) => {
+            return true
+        },
+        callback=(response)=>{  
+            if([200,201].includes(response.status)){
+                alert("Successfully Register")
+            }
+        },
+        isMultiForm=false
+    )
+</script>
 {% endblock %}

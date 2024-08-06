@@ -1,0 +1,299 @@
+/* DMSans */
+@font-face {
+    font-family: DMSans-regular;
+    src: url(/static/fonts/DM_Sans/DMSans-Regular.ttf);
+}
+.font-dmsans-regular {
+    font-family: 'DMSans-regular', sans-serif !important;
+}
+
+@font-face {
+    font-family: DMSans-bold;
+    src: url(/static/fonts/DM_Sans/DMSans-Bold.ttf);
+}
+.font-dmsans-bold {
+    font-family: 'DMSans-bold', sans-serif !important;
+}
+
+@font-face {
+    font-family: DMSans-medium;
+    src: url(/static/fonts/DM_Sans/DMSans-medium.ttf);
+}
+.font-dmsans-medium {
+    font-family: 'DMSans-medium', sans-serif !important;
+}
+
+/* Poppins */
+
+@font-face {
+    font-family: Poppins-Regular;
+    src: url(/static/fonts/Poppins/Poppins-Regular.ttf);
+}
+.font-poppins-regular {
+    font-family: 'Poppins-Regular', sans-serif !important; 
+}
+
+@font-face {
+    font-family: Poppins-Bold;
+    src: url(/static/fonts/Poppins/Poppins-Bold.ttf);
+}
+.font-poppins-bold {
+    font-family: 'Poppins-Bold', sans-serif !important;
+}
+
+@font-face {
+    font-family: Poppins-SemiBold;
+    src: url(/static/fonts/Poppins/Poppins-SemiBold.ttf);
+}
+.font-poppins-semibold {
+    font-family: 'Poppins-SemiBold', sans-serif !important;  
+}
+
+@font-face {
+    font-family: Poppins-Light;
+    src: url(/static/fonts/Poppins/Poppins-Light.ttf);
+}
+.font-poppins-light {
+    font-family: 'Poppins-Light', sans-serif !important; 
+}
+
+@font-face {
+    font-family: Poppins-Medium;
+    src: url(/static/fonts/Poppins/Poppins-Medium.ttf);
+}
+.font-poppins-medium {
+    font-family: 'Poppins-Medium', sans-serif !important;
+}
+
+@font-face {
+    font-family: Poppins-Thin;
+    src: url(/static/fonts/Poppins/Poppins-Thin.ttf);
+}
+.font-poppins-thin {
+    font-family: 'Poppins-Thin', sans-serif !important;   
+}
+
+
+
+body {
+    font-family: 'DMSans-regular', sans-serif;
+}
+/* Sroll bar */
+    ::-webkit-scrollbar-track
+    {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar
+    {
+        width: 4px;
+        background-color: #F5F5F5;
+    }
+
+    ::-webkit-scrollbar-thumb
+    {
+        background-color: #3e7fce; 
+    }
+/* END  */
+
+/* Radio Button */
+    /* The container */
+    .radio-btn-container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    /* Hide the browser's default radio button */
+    .radio-btn-container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    
+    /* Create a custom radio button */
+    .checkmark {
+        position: absolute;
+        top: 3px;
+        left: 0;
+        height: 20px;
+        width: 20px;
+        background-color: #fafafa;
+        border-radius: 50%;
+        border: 5px solid #E6E7E8;
+    }
+    
+    /* On mouse-over, add a grey background color */
+    .radio-btn-container:hover input ~ .checkmark {
+        background-color: #ccc; 
+    }
+    
+    /* When the radio button is checked, add a blue background */
+    .radio-btn-container input:checked ~ .checkmark {
+        border-color: #e1efff !important;
+        background-color: #e1efff;
+    
+    }
+    
+    .radio-btn-container input:checked ~ .radio-btn-label{
+        color: #0265DC; 
+    }
+    
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+    
+    /* Show the indicator (dot/circle) when checked */
+    .radio-btn-container input:checked ~ .checkmark:after {
+        display: block;
+    }
+    
+    /* Style the indicator (dot/circle) */
+    .radio-btn-container .checkmark:after {
+        top: 1px;
+        left: 1px;
+            width: 8px;
+            height: 8px;
+        border-radius: 50%;
+        background: #0265dc; 
+    } 
+/* END  */
+
+input:focus {
+    outline: none !important; 
+    border: none !important;
+    border-top-style: hidden !important;
+    border-right-style: hidden !important;
+    border-left-style: hidden !important;
+    border-bottom-style: hidden !important;
+    border-color: transparent !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.iti{
+    width: 100%;
+}
+
+.page-item{
+    margin: 0 5px;
+}
+.page-link{
+    background-color: transparent;
+    padding: 10px 20px;
+    color: #969696;
+    font-family: 'Poppins-SemiBold', sans-serif !important; 
+}
+
+/* .select2-container{
+    z-index: 2000;
+} */
+
+span.select2-container {
+    z-index:80;
+}
+
+.select2-search__field{
+    z-index: 20001;
+}
+
+.btn-card-success, .card-success{
+    background-color: #E6F2E2;
+    color: #454749;
+    border: 3px solid #E6F2E2;
+}
+.btn-card-success:hover, .btn-card-success.active{
+    border: 3px solid #0D9A4E;
+}
+
+.btn-card-warning, .card-warning{
+    background-color: #F8F0E7;
+    color: #454749;
+    border: 3px solid #F8F0E7;
+}
+.btn-card-warning:hover, .btn-card-warning.active{
+    border: 3px solid #D09B5E;
+}
+
+.btn-card-danger, .card-danger{
+    background-color: #FFEEEE;
+    color: #454749;
+    border: 3px solid #FFEEEE;
+}
+.btn-card-danger:hover, .btn-card-danger.active{
+    border: 3px solid #FF5858;
+}
+
+
+.btn-card-info, .card-info{
+    background-color: #EEF0F8;
+    color: #454749;
+    border: 3px solid #EEF0F8;
+}
+.btn-card-info:hover, .btn-card-info.active{
+    border: 3px solid #6375BF;
+}
+
+.table-row:hover, .table-row.active{
+    background-color: #EEF0F8;
+}
+
+.select2-container--bootstrap-5 .select2-selection{
+    border:none !important;
+}
+
+.productItems:hover{
+    border: 1px solid #0265DC !important;
+}
+.ptb-10{
+    padding: 10px 10px!important
+}
+
+.error-border {
+    border-color: #D74141 !important;
+}
+
+.error-message {
+    color: #D74141;
+    padding: 10px 0;
+}
+
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 16px;
+    position: fixed;
+    z-index: 999;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+  }
+  
+  #snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+
+  .select2-selection--multiple{
+    border: 0 !important;
+}
+.select2-selection__rendered{
+    margin-right: 29px;
+}

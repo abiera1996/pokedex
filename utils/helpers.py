@@ -1,7 +1,7 @@
 import math
 import operator
 import uuid
-import os, string, random
+import os, string, random, json
 from django.db.models import Q
 from functools import reduce
 from django.utils.timezone import now
@@ -125,3 +125,9 @@ def get_or_none(classmodel, **kwargs):
         return obj
     except:
         return None
+    
+
+def decode_request_body(body):
+    body_unicode = body.decode('utf-8')
+    body = json.loads(body_unicode)
+    return body

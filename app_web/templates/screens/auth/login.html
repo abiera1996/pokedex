@@ -1,7 +1,35 @@
+{% extends 'base/auth_base.html' %}
 {% block content %}
-<form>
-    <input name="username" type="text"/>
-    <input name="password" type="password"/>
+<form id="form-login" action="{% url 'web:login_request' %}">
+    <input name="username" placeholder="username" type="text"/>
+    <input name="password" placeholder="password" type="password"/>
     <input type="submit" value="Login"/>
+
+    <a href="{% url 'web:register' %}">Registration</a>
 </form>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    API.formRequest(
+        '#form-login',
+        extended_data={},
+        processData=() => {},
+        checkValidation=(form_data) => {
+            return true
+        },
+        callback=(response)=>{  
+            if([200,201].includes(response.status)){
+                location.reload()
+            } else if (response.status != 400) {
+                Swal.fire({
+                    icon: [200,201].includes(response.status)?'success':'error',
+                    title:  'Login Validation',
+                    text: response.message || response.data?.message,
+                })
+            } 
+        },
+        isMultiForm=false
+    )
+</script>
 {% endblock %}

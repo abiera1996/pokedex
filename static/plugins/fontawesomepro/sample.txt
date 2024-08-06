@@ -1,0 +1,16 @@
+<body>
+  <!-- solid style -->
+  <i class="fas fa-user"></i>
+
+  <!-- regular style -->
+  <i class="far fa-user"></i>
+
+  <!-- light style -->
+  <i class="fal fa-user"></i>
+
+  <!-- duotone style -->
+  <i class="fad fa-user"></i>
+
+  <!--brand icon-->
+  <i class="fab fa-github-square"></i>
+</body>

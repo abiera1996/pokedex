@@ -28,6 +28,7 @@ urlpatterns = [
 
 urlpatterns_api = [
     path("api/", include([  
+        path('', include('app_pokemon.urls')),
     ]))
 ]
 

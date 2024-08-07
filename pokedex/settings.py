@@ -175,7 +175,7 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Pokemon API',
-    'DESCRIPTION': 'Core API business management and services. ',
+    'DESCRIPTION': 'Use the Advanced Search to explore Pokémon by type, weakness, Ability, and more! Search for a Pokémon by name or using its National Pokédex number. ',
     'CONTACT': {},
     'LICENSE': {},
     'VERSION': '1.0.0',

@@ -1,12 +1,39 @@
 {% extends 'base/auth_base.html' %}
 {% block content %}
-<form id="form-login" action="{% url 'web:login_request' %}" method="post">
-    <input name="username" placeholder="username" type="text"/>
-    <input name="password" placeholder="password" type="password"/>
-    <input type="submit" value="Login"/>
-
-    <a href="{% url 'web:register' %}">Registration</a>
-</form>
+<div class="w-[80%]" data-aos="fade-up" data-aos-delay=400>
+    <form id="form-login" action="{% url 'web:login_request' %}" method="post">
+        <div class="font-semibold text-3xl">
+            Welcome back
+        </div>
+        <div class="mb-14">
+            Log in to access your account 
+        </div>
+        
+        <div class="mb-3">
+            {% include 'components/inputs/input_with_label.html' with label="Username" name="username" placeholder='You username' class='my-1' iconRight="fal fa-envelope" type="text" classBorder="border-gray-400"  %}
+        </div>
+        <div>
+            {% include 'components/inputs/input_with_label.html' with label="Password" name="password" id="password" placeholder='Fill in your password' class='my-1' type="password" classBorder="border-gray-400"  %}
+        </div>
+        <div class="w-full flex mt-4">
+            <div class="w-1/2">
+                <div class="flex items-center mb-4">
+                    <input id="default-checkbox" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                    <label for="default-checkbox" class="ml-2 text-md font-medium text-gray-900 ">Keep me logged in</label>
+                </div>
+            </div>
+            <div class="w-1/2 text-right flex justify-end">
+                <a href="#" class="text-blue-400 font-bold">Forgot Password</a>
+            </div>
+        </div>
+        <div class="mt-5">
+            {% include 'components/buttons/btn_regular.html' with title='Log in' type="submit" class='bg-primaryColor text-white rounded-md' size='lg' %} 
+        </div>
+    </form>
+    <p class="text-center text-sm text-[#1E1D1F] mt-10"> 
+        Dont have an account? <a class="text-subColor hover:text-primaryColor" href="{% url 'web:register' %}">Sign Up</a>. 
+    </p>
+</div> 
 {% endblock %}
 
 {% block javascript %}

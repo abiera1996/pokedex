@@ -75,7 +75,7 @@ def register_request(request):
     if not errors:
         user = User.objects.filter( username=data['username'])
         if user.exists():
-            errors['username'] = 'Username already exist!'
+            errors['username'] = ['Username already exist!']
              
     if errors:
         return JsonResponse({ 
@@ -222,7 +222,6 @@ def delete_pokemon_request(request, id):
     return JsonResponse({
         'message': 'Successfully Deleted.'
     }, status=200)
-
 
 
 @require_http_methods(['GET'])

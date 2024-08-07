@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
+    <link href="{% static 'plugins/bootstrap 5.0.2/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesomepro/css/all.min.css' %}" />
     {% tailwind_css %}
     {% block css %}
     {% endblock %}
@@ -12,8 +14,27 @@
     <script src="{% static 'js/jquery-3.6.3.min.js' %}"></script>
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
+    <div class="h-[100dvh] w-full">
+        <div class="flex h-full">
+            <div class="hidden lg:block w-[55%] h-full relative">
+                <img src="{% static 'image/bg.jpg' %}" class="w-full h-full object-cover"/>
+                <div class="absolute z-30 bottom-10 p-5" data-aos="fade-up" >
+                    <img src="{% static 'image/logo.png' %}" class="w-[400px] h-[100px] object-contain"/>
+                    <div class="text-3xl text-white w-[90%]"> 
+                    </div>
+                </div>
+            </div>
+            <div class="w-full lg:w-[45%] h-full py-20 md:p-0">
+                <div class="grid place-items-center h-[95%]">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+                <div class="h-[5%] flex justify-center">
+                    COPYRIGHT  © 2024 Pokedex, All rights Reserved
+                </div>
+            </div> 
+        </div> 
+    </div> 
     <script src="{% static 'plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
     <script src="{% static 'js/axios.min.js' %}"></script>
     <script src="{% static 'js/api_request.js' %}"></script> 

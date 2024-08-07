@@ -1,13 +1,79 @@
 {% extends 'base/auth_base.html' %}
 {% block content %}
-<form id="form-register" action="{% url 'web:register_request' %}"  method="post">
-    <input name="first_name" placeholder="First Name" type="text" required/>
-    <input name="last_name" placeholder="Last Name" type="text" required/> 
-    <input name="username" placeholder="Username" type="text" required/>
-    <input name="password" placeholder="Passsword" type="password" required/>
-    <input name="repassword" placeholder="Confirm Password" type="password" required/>
-    <input type="submit" value="Register"/>
-</form>
+<div id="register-form" class="p-5"> 
+       
+    <div class="font-bold text-md md:text-3xl mb-9">
+        Create an Account
+    </div>
+  
+    
+    <form id="form-register" action="{% url 'web:register_request' %}" method="post"> 
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    {% include 'components/inputs/input_with_label.html' with name="first_name" label="Your name *" placeholder="Enter first name" inputClass="placeholder-[#A4A1A8]  text-sm" labelClass='text-textColor text-sm' class='my-1 py-1' type="text" classBorder="rounded-md border-[#D8DDE5] focus-within:border-primaryColor" required=True  %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    {% include 'components/inputs/input_with_label.html' with name="last_name" label="" placeholder="Enter last name" inputClass="placeholder-[#A4A1A8]  text-sm" labelClass='text-textColor text-sm' class='mb-1 py-1 mt-[10px!important] lg:mt-[27px!important]' type="text" classBorder="rounded-md border-[#D8DDE5] focus-within:border-primaryColor" required=True  %}
+                </div> 
+            </div>
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    {% include 'components/inputs/input_with_label.html' with name="username" id="username" label="Your username *" placeholder="Enter username" inputClass="placeholder-[#A4A1A8]  text-sm" labelClass='text-textColor text-sm' class='my-1 py-1' type="text" classBorder="rounded-md border-[#D8DDE5] focus-within:border-primaryColor" required=True  %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    {% include 'components/inputs/input_with_label.html' with label="Password" name="password" id="password" placeholder='Fill in your password' class='my-1' type="password" classBorder="border-gray-400"  required=True %}
+                </div>
+            </div> 
+            <div class="col-lg-6">
+                <div class="mb-3">
+                    {% include 'components/inputs/input_with_label.html' with label="Confirm Password" name="repassword" id="repassword" placeholder='Confirm your password' class='my-1' type="password" classBorder="border-gray-400" required=True %}
+                </div>
+                
+            </div> 
+        </div>
+       
+        <div class="block sm:flex mt-9">
+            <p class="text-[#676469] text-xs leading-[17px] flex-1">By logging in to this site, you agree to the <a class="underline" href="#">Terms of Service</a> and acknowledge the 
+                <a class="underline" href="#">Privacy Policy</a>.</p>
+            <div class="mt-6 lg:mt-0"> 
+                {% include 'components/buttons/btn_regular.html' with title='Signup' type="submit" class='bg-primaryColor text-white rounded-md' size='lg' %} 
+            </div>
+        </div>
+    </form>
+    <p class="text-center text-sm text-[#1E1D1F] mt-10"> 
+        Already have an account? <a class="text-subColor hover:text-primaryColor" href="{% url 'web:login' %}">Login</a>. 
+    </p>
+</div>
+
+<div id="success-container" class="row justify-content-center align-items-center hidden"  data-aos="fade-up" style="height: 100%; min-height: 100vh;">
+    <div class="col-lg-11 p-5" >
+
+        <div  class="text-subColor font-bold text-lg">
+            Thank you for creating an account!
+        </div>
+        <div  class="text-textColor font-bold text-3xl mt-1">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+        </div> 
+        <p class="text-[#676469] mt-3 leading-6">
+            <span class="font-semibold">
+                
+            </span>
+             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </p> 
+
+        <p class="text-center text-sm text-[#1E1D1F] mt-10"> 
+            Go back to <a class="text-subColor hover:text-primaryColor" href="{% url 'web:login' %}">Login</a>. 
+        </p>
+        
+    </div>
+
+</div>
+ 
 {% endblock %}
 
 
@@ -22,7 +88,8 @@
         },
         callback=(response)=>{  
             if([200,201].includes(response.status)){
-                alert("Successfully Register")
+                $('#register-form').addClass('hidden');
+                $('#success-container').removeClass('hidden'); 
             }
         },
         isMultiForm=false

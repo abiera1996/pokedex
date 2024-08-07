@@ -20,6 +20,7 @@
         'value':''
     }]
     - number_validation (number, money, decimal)
+    - min
     if dropdown_search -- select2
         - url *
         - multiple
@@ -27,6 +28,7 @@
             'id': '',
             'text': ''
         }]
+        - customParams
         
 {% endcomment %}
 
@@ -37,19 +39,20 @@
         </div>
     {%  endif %}
     <div class="w-full">
-        {% if type == 'textarea' %} 
-                <textarea id="{{id}}" placeholder="{{placeholder}}" name="{{name}}" class='border-{{name}} input-border-component {{class}} w-full rounded-md '
-                    rows="{% if rows %}{{rows}} {% else %}4{% endif %}"
-                    {{attribute}}  
-                    {% if readonly %}readonly{% endif %}
-                    {% if required %}  
-                        required
-                    {% endif %}
-                >{{value}}</textarea>  
+        {% if type == 'textarea' %}
+            <textarea id="{{id}}" placeholder="{{placeholder}}" name="{{name}}" class='border-{{name}} input-border-component {{class}} w-full bg-gray-100 rounded-md ' {% if readonly %}readonly{% endif %}
+            {{attribute}}
+                rows="4"
+                {% if required %}  
+                    required
+                {% endif %}
+            >{{value}}</textarea> 
         {% else %}
             <div class='border-{{name}} input-border-component {% if classBorder %}{{classBorder}}{% else %}border-primaryColor{% endif %} {{class}} flex w-full border-1 text-sm rounded-md'
             {% if type == 'date' %}
-                data-mdb-format="mm-dd-yyyy"  id="{{id}}" data-mdb-toggle-button="false"
+                data-mdb-format="yyyy-mm-dd"  id="{{id}}" data-mdb-toggle-button="false"
+            {% elif type == 'time' %}  
+                id="{{id}}" data-mdb-toggle-button="false"
             {% endif %}>
                 {% if iconLeft %}
                     <div class='grid place-items-center px-3 pr-[10px]'>
@@ -58,116 +61,90 @@
                 {% endif %}
                 <div class='flex items-stretch justify-center flex-1'>
                     {% if type == 'date' %}
-                        <input type="text" {% if disabled %}disabled{% endif %} {% if readonly %}readonly{% endif %} class=" w-full focus:outline-none border-0 bg-transparent  " 
-                        value="{{ value|date:"m-d-Y" }}" name="{{name}}" data-mdb-toggle="datepicker" placeholder="{{placeholder}}"
+                        {% with value|date:"Y-m-d" as date_val %}  
+                            <input type="text" {% if disabled %}disabled{% endif %} class=" w-full focus:outline-none border-0 bg-transparent  my-[1px]" 
+                            value="{% if date_val %}{{date_val}}{% else %}{% if value %}{{value}}{% endif %}{% endif %}" name="{{name}}" data-mdb-toggle="datepicker" placeholder="{{placeholder}}"
+                            {% if required %}  
+                                required
+                            {% endif %}/> 
+                        {% endwith %}  
+                        
+                        <script>
+                            var {{name}} = document.querySelector('#{{id}}'); 
+                            new mdb.Datepicker({{name}}, {
+                                datepicker: { format: 'yyyy-mm-dd'},
+                                {% if disablePast %}  
+                                    disablePast: true,
+                                {% endif %}
+                                
+                            });
+                        </script>
+                    {% elif type == 'date_range' %}
+                    <div id="{{id}}" class=' w-full focus:outline-none border-0 bg-transparent my-[1px] cursor-pointer'  style="padding: 4.3px 9px;" >
+                        <i class="fa fa-calendar"></i>&nbsp;
+                        <span>{{placeholder}}</span> <i class="fa fa-caret-down"></i>
+                    </div>
+                    <input name="{{fromName}}" type="hidden" />
+                    <input name="{{toName}}" type="hidden" />
+
+                    <script type="text/javascript">
+                            var start_{{id}} = moment().subtract(29, 'days');
+                            var end_{{id}} = moment();
+                        
+                            function cb{{id}}(start, end) { 
+                                $('input[name={{fromName}}]').val(start.format('YYYY-MM-DD'))
+                                $('input[name={{toName}}]').val(end.format('YYYY-MM-DD'))
+                                $('#{{id}} span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            }
+                        
+                            $('#{{id}}').daterangepicker({ 
+                                autoUpdateInput: false,
+                                locale: {
+                                    cancelLabel: 'Clear'
+                                },
+                                ranges: {
+                                    'Today': [moment(), moment()],
+                                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                                },
+                            "startDate": moment().subtract(6, 'days'),
+                            "endDate": moment()
+                            }, cb{{id}});
+                            $('#{{id}}').off('apply.daterangepicker')
+                            $('#{{id}}').on('apply.daterangepicker', function(ev, picker) {
+                                if (typeof onDateRangeChange_{{id}} === "function")
+                                    onDateRangeChange_{{id}}(picker.startDate , picker.endDate);
+                            });
+                            
+                            function clear{{id}}() {
+                                $('input[name={{fromName}}]').val('')
+                                $('input[name={{toName}}]').val('')
+                                $('#{{id}} span').html('{{placeholder}}');
+                            } 
+                            $('#{{id}}').off('cancel.daterangepicker')
+                            $('#{{id}}').on('cancel.daterangepicker', function(ev, picker) { 
+                                $(this).val('');
+                                clear{{id}}()
+                                setTimeout(() => {
+                                    if (typeof onDateRangeChange_{{id}} === "function")
+                                        onDateRangeChange_{{id}}(picker.startDate , picker.endDate);
+                                }, 600);
+                            });
+ 
+                        </script>
+                    {% elif type == 'time' %}
+                        <input type="text" {% if disabled %}disabled{% endif %} class=" w-full focus:outline-none border-0 bg-transparent  my-[1px]" 
+                        value="{{ value|time:'h:i A' }}" name="{{name}}" data-mdb-toggle="timepicker" placeholder="{{placeholder}}"
                         {% if required %}  
                             required
                         {% endif %}/> 
                         <script>
                             var {{name}} = document.querySelector('#{{id}}'); 
-                            new mdb.Datepicker({{name}}, {
-                                datepicker: { format: 'mm-dd-yyyy'},
-                            });
+                            new mdb.Timepicker({{name}});
                         </script>
-                        {% elif type == 'date_range' %}
-                            <input name="{{fromName}}" type="hidden" value="{{valueFrom}}"/>
-                            <input name="{{toName}}" type="hidden" value="{{valueTo}}" />
-
-                            {% if hasRange %} 
-                                <div id="{{id}}" class=' w-full focus:outline-none border-0 bg-transparent my-[1px] cursor-pointer'  style="padding: 4.3px 9px;" >
-                                    <i class="fa fa-calendar"></i>&nbsp;
-                                    <span>{{placeholder}}</span> <i class="fa fa-caret-down"></i>
-                                </div>
-                                
-                                <script type="text/javascript">
-                                        var start_{{id}} = moment().subtract(29, 'days');
-                                        var end_{{id}} = moment();
-                                    
-                                        function cb{{id}}(start, end) { 
-                                            $('input[name={{fromName}}]').val(start.format('YYYY-MM-DD'))
-                                            $('input[name={{toName}}]').val(end.format('YYYY-MM-DD'))
-                                            $('#{{id}} span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-                                        }
-                                    
-                                        $('#{{id}}').daterangepicker({ 
-                                            autoUpdateInput: false,
-                                            locale: {
-                                                cancelLabel: 'Clear'
-                                            },
-                                            
-                                            ranges: {
-                                                'Today': [moment(), moment()],
-                                                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                                                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                                                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                                                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                                                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                                            }
-                                        
-                                        }, cb{{id}});
-                                        $('#{{id}}').off('apply.daterangepicker')
-                                        $('#{{id}}').on('apply.daterangepicker', function(ev, picker) {
-                                            if (typeof onDateRangeChange_{{id}} === "function")
-                                                onDateRangeChange_{{id}}(picker.startDate , picker.endDate);
-                                        });
-                                        
-                                        function clear{{id}}() {
-                                            $('input[name={{fromName}}]').val('')
-                                            $('input[name={{toName}}]').val('')
-                                            $('#{{id}} span').html('{{placeholder}}');
-                                        } 
-                                        $('#{{id}}').off('cancel.daterangepicker')
-                                        $('#{{id}}').on('cancel.daterangepicker', function(ev, picker) { 
-                                            $(this).val('');
-                                            clear{{id}}()
-                                            setTimeout(() => {
-                                                if (typeof onDateRangeChange_{{id}} === "function")
-                                                    onDateRangeChange_{{id}}('' , '');
-                                            }, 600);
-                                        });
-                                        
-
-                                </script>
-                            {% else %}
-                            <!-- sample value 01/01/2018 - 01/15/2018 -->
-                            <input type="text" style="border: none;width: 100%;" placeholder="{{placeholder}}" id="{{id}}" name="{{name}}" value="{{value}}" />
-
-                                <script>
-                                    function clear{{id}}() {
-                                        $('input[name={{fromName}}]').val('')
-                                        $('input[name={{toName}}]').val('')
-                                        $('#{{id}} span').html('{{placeholder}}');
-                                    }  
-                                    $('input[name="{{name}}"]').daterangepicker({
-                                        opens: 'left',
-                                        autoUpdateInput: false,
-                                        locale: {
-                                            cancelLabel: 'Clear'
-                                        }
-                                    }, function(start, end, label) { 
-                                        
-                                        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-                                    });
-                                    $('input[name="{{name}}"]').off('cancel.daterangepicker')
-                                    $('input[name="{{name}}"]').on('cancel.daterangepicker', function(ev, picker) {
-                                        //do something, like clearing an input
-                                        $(this).val('');
-                                        $('input[name={{fromName}}]').val('')
-                                        $('input[name={{toName}}]').val('')
-                                        if (typeof onDateRangeChange_{{id}} === "function")
-                                            onDateRangeChange_{{id}}('' , '');
-                                    });
-                                    
-                                    $('input[name="{{name}}"]').off('apply.daterangepicker')
-                                    $('input[name="{{name}}"]').on('apply.daterangepicker', function(ev, picker) {
-                                        $('input[name={{fromName}}]').val(picker.startDate.format('YYYY-MM-DD'))
-                                        $('input[name={{toName}}]').val(picker.endDate.format('YYYY-MM-DD'))
-                                        if (typeof onDateRangeChange_{{id}} === "function")
-                                            onDateRangeChange_{{id}}(picker.startDate , picker.endDate);
-                                        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
-                                    }); 
-                                </script>
-                            {% endif %}
                     {% elif type == 'dropdown' %}  
                         <select id="{{id}}" {% if disabled %}disabled{% endif %} name="{{name}}" class='{{class}} w-full focus:outline-none focus:ring-0 border-0 ' 
                             {{attribute}}
@@ -185,8 +162,13 @@
                             {% endfor %}
                         </select>
                     {% elif type == 'dropdown_search' %}  
-                        
-                        <select id="{{id}}" name="{{name}}"  {% if disabled %}disabled{% endif %} class='{{class}}' 
+                        <style>
+                            .select2-container--bootstrap-5 .select2-selection--single{
+                                padding: 0.5rem 0.75rem;
+                                min-height: calc(1.7em + 0.75rem + 2px);
+                            }
+                        </style>
+                        <select id="{{id}}" {% if disabled %}disabled{% endif %} name="{{name}}" class='{{class}}' 
                             {{attribute}}
                             style="padding: 4.3px 9px;width:100%;"
                         {% if required %}  
@@ -202,19 +184,88 @@
                         
                         <script>
                         {% if url %}
+                            
                             $("#{{id}}").select2({
                                 theme: "bootstrap-5",
                                 placeholder: "{{placeholder}}",
                                 closeOnSelect: true,
                                 allowClear: {% if allowClear %} true{% else %} false{% endif %},
-                                {% if multiple %}
-                                    multiple: true,
-                                {% else %} 
-                                    multiple: false, 
+                                multiple: {% if multiple %} true {% else %} false {% endif %},
+                                ajax: {
+                                    url: "{{url}}",
+                                    dataType: 'json',
+                                    delay: 250,
+                                    data: function(params) {
+                                        var includedTemplate = document.getElementById('{{id}}')
+                                        var data = includedTemplate.getAttribute('data-custom-param')
+                                        return {
+                                            data:  data,
+                                            search: params.term,
+                                            page: params.page || 1,
+                                            limit: 10
+                                        };
+                                    },
+                                    processResults: function(response, params) {
+                                        params.page = params.page || 1;
+                                        return {
+                                            results: response.data,
+                                            pagination: {
+                                                more: (params.page) < response.page_count
+                                            }
+                                        };
+                                    },
+                                    cache: true
+                                    },
+                            });
+                        {% endif %}
+                            {% for option in default_value %}
+                                {% if not forloop.last %}
+                                    $("#{{id}}").append($("<option selected='selected'></option>").val("{{option.id}}").text("{{option.text}}".trim())).trigger('change');
                                 {% endif %}
-                                {% if modalParent %}
-                                    dropdownParent: $("#modal_rounded"),
-                                {% endif %}
+                            {% endfor %}
+                            
+                        </script>
+
+                    {% elif type == 'dropdown_search_multiple' %}
+                        <style>
+
+                        .select2-container--default .select2-selection--multiple {
+                            padding: 0.6rem 0.75rem;
+                        }
+                        .select2-container .select2-search--inline .select2-search__field {
+                            font-size: 1rem;
+                            height: 23px;
+                            margin: 0;
+                        }
+                        .select2-container--default .select2-selection--multiple .select2-selection__choice__display{
+                            overflow: hidden;
+                            display: -webkit-box;
+                            max-width: 200px;
+                            padding-left: 2px;
+                            padding-right: 2px;
+                        }
+                        .select2-container--default .select2-selection--multiple .select2-selection__choice {
+                            margin-top: 0;
+                            margin-left: 0;
+                            margin-right: 5px;
+                            vertical-align: text-bottom;
+                        }
+                        </style>
+                        <select id="{{id}}" {% if disabled %}disabled{% endif %} name="{{name}}" class='{{class}}' {{attribute}} style="padding: 4.3px 9px;width:100%;"
+                        {% if required %}required{% endif %}>
+                        {% for option in default_value %}
+                            <option value="{{option.id}}" selected>
+                                {{option.text}}
+                            </option>
+                        {% endfor %}
+                        </select>
+                        <script>
+                        {% if url %}
+                            $("#{{id}}").select2({
+                                placeholder: "{{placeholder}}",
+                                closeOnSelect: true,
+                                allowClear: {% if allowClear %} true{% else %} false{% endif %},
+                                multiple: true,
                                 ajax: {
                                     url: "{{url}}",
                                     dataType: 'json',
@@ -244,12 +295,15 @@
                                     $("#{{id}}").append($("<option selected='selected'></option>").val("{{option.id}}").text("{{option.text}}".trim())).trigger('change');
                                 {% endif %}
                             {% endfor %}
-                            
-                        </script> 
+
+                        </script>
                     {% elif type == 'phone_number' %} 
-                        <input type="text" {% if readonly %}readonly{% endif %} name="{{name}}" id="{{id}}" 
+                        <input type="text" name="{{name}}" id="{{id}}" 
                         class="w-full focus:outline-none border-0 bg-transparent py-[9px]"
-                        placeholder="{{placeholder}}" value="{{value}}" required/>
+                        placeholder="{{placeholder}}" value="{{value}}"
+                        {% if required %}  
+                            required
+                        {% endif %} />
                         <script>
                                 $('#{{id}}').numberfy({
                                     "allow_negative": false,
@@ -299,7 +353,8 @@
                                     "allow_decimal": true,
                                 });
                             {% endif %}
-
+                            
+                            
                             {% if type == 'password' %}
                                 $('#eye{{id}}').click(()=>{
                                     var input_type = $("#{{id}}").prop("type");

@@ -1,0 +1,81 @@
+{% comment %}
+    Variables
+    - imageId:string 
+    - btnId:string 
+    - name:string   
+    - value {url: ""}
+    - container_style
+
+{% endcomment %}
+
+{% if container_style == 2 %}
+<div class="border-dashed border-2 flex rounded-xl justify-center items-center p-4">
+    <div class="w-[130px] h-[130px] mr-2">
+        <img src="{% if value %}{{value.url}}{% else %}/static/image/Frame.png{% endif %}" id="{{imageId}}" class="h-full w-full object-contain"/>
+    </div>
+    <div class="text-sm mr-2 flex-1 pl-6 flex flex-col items-start">
+        {% if labelText %}
+        {{labelText}}
+        {% else %}
+        Upload a profile picture. Max size 2MB
+        {% endif %}
+        <div class="mt-4">
+            {% include 'components/buttons/btn_border.html' with title='Browse' id=btnId size='sm' class='rounded-md' %}
+        </div>
+    </div>
+   
+    <input type="file" name="{{name}}" accept="image/*" id="{{name}}" class="hidden">
+</div>
+{% elif container_style == 3 %}
+<div class="border-dashed border-[1px] rounded-2xl d-flex flex-column justify-content-center align-items-center p-4 cursor-pointer inline" id="{{ btnId }}">
+    <div class="mb-3 px-3 w-[230px] h-[200px] ">
+        <img src="{% if value %}{{value.url}}{% else %}/static/image/Frame.png{% endif %}" id="{{imageId}}" class="h-full w-full object-cover rounded-2xl" alt=""/>
+    </div>
+    <span class="text-gray-600 text-sm align-self-center">{{label}}</span>
+</div>
+<input type="file" name="{{name}}" accept="image/*" id="{{name}}" class="hidden">
+{% else %}
+<div class="border-dashed border-[1px] p-2 flex rounded-xl justify-center items-center">
+    <div class="w-[70px] h-[70px] mr-2">
+        <img src="{% if value %}{{value.url}}{% else %}/static/image/Frame.png{% endif %}" id="{{imageId}}" class="h-full w-full object-contain"/>
+    </div>
+    <div class="text-xs mr-2 flex-1 pl-2">
+        {% if labelText %}
+        {{labelText}}
+        {% else %}
+        Upload a profile picture. Max size 2MB
+        {% endif %}
+    </div>
+    <div>
+        {% include 'components/buttons/btn_border.html' with title='Browse' id=btnId size='sm' class='rounded-md' %}
+    </div>
+    <input type="file" name="{{name}}" accept="image/*" id="{{name}}" class="hidden">
+</div>
+{% endif %}
+<script>
+    $(document).off('click', '#{{btnId}}')
+    $(document).off('change', '#{{name}}')
+    
+    $(document).on('click', '#{{btnId}}', function(e){
+        e.preventDefault()
+        $('#{{name}}').click()
+    })
+    $(document).on('change', '#{{name}}', function(event) {
+        if (typeof event.target.files[0] !== 'undefined') {
+            var path = URL.createObjectURL(event.target.files[0]); 
+
+            if(this.files.length != 0){
+                fileThis = this.files[0]
+                var fileType = fileThis["type"];
+                var validImageTypes = ["image/gif", "image/jpeg", "image/png", "image/jpg"];
+
+                if ($.inArray(fileType, validImageTypes) < 0) {
+                    Swal.fire("Wait!", "The file type is invalid!", "error")
+                } else { 
+                    $('#{{imageId}}').attr('src', path);
+                    $('.{{imageId}}-other').attr('src', path);
+                }
+            }
+        } 
+    });
+</script>

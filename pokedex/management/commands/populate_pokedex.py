@@ -31,9 +31,12 @@ class Command(BaseCommand):
                 ability_obj, created = Ability.objects.get_or_create(name=ability_name)
                 abilities.append(ability_obj)
 
+            image = pokemon_data['sprites']['front_default']
+            if pokemon_data['sprites']['other'].get('showdown'):
+                image = pokemon_data['sprites']['other']['showdown']['front_default']
             pokemon, created = Pokemon.objects.get_or_create(
                 name=pokemon_data['name'],
-                default_photo=pokemon_data['sprites']['front_default'],
+                default_photo=image,
                 height=pokemon_data['height'],
                 weight=pokemon_data['weight']
             ) 

@@ -1,6 +1,6 @@
 {% extends 'base/auth_base.html' %}
 {% block content %}
-<form id="form-register" action="{% url 'web:register_request' %}">
+<form id="form-register" action="{% url 'web:register_request' %}"  method="post">
     <input name="first_name" placeholder="First Name" type="text" required/>
     <input name="last_name" placeholder="Last Name" type="text" required/> 
     <input name="username" placeholder="Username" type="text" required/>

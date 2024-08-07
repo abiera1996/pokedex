@@ -9,12 +9,11 @@ class CustomFileHandler(handlers.RotatingFileHandler):
                 record.msg = f' -_- {json.dumps(record.msg)}'
             except:
                 pass
-        try:
-            if self.shouldRollover(record):
-                self.doRollover()
-            logging.FileHandler.emit(self, record)
-        except Exception:
-            
-            self.handleError(record)
-
-        return record
+        with self.lock:
+            try:
+                if self.shouldRollover(record):
+                    self.doRollover()
+                super().emit(record)
+            except Exception as e: 
+                self.handleError(record)
+ 

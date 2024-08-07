@@ -7,6 +7,20 @@ from functools import reduce
 from django.utils.timezone import now
 
 
+TYPE_COLOR = {
+    'poison': '#bb88b4',
+    'grass': '#a8f084',
+    'bug': '#a8f084',
+    'flying': '#f5db6a',
+    'fire': '#ff994d',
+    'water': '#97afff',
+    'fighting': '#df7563',
+    'fairy': '#e395af',
+    'electric': '#e7d31b',
+    'steel': '#b4aac3',
+    'ice': '#85ddff'
+}
+
 def id_generator(size=25, chars=string.ascii_lowercase + string.digits):
     """
     Generate random string

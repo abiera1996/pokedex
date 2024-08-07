@@ -70,9 +70,12 @@ class APIRequest {
                 $(self).find('button[type=submit]').eq(0).html('Please wait....')
                 
                 class_self.setupInputError('', false)  
-                const response = await axios.post(
-                    $(this).attr('action'), 
-                    form_data
+                const response = await axios(
+                    { 
+                        url: $(this).attr('action'), 
+                        method: $(this).attr('method'), 
+                        data: form_data
+                    }
                 )
                 
                 if(response.status == 400){ 

@@ -1,0 +1,12 @@
+{% comment %}
+- goBackLink
+{% endcomment %}
+<a 
+{% if goBackLink %}
+    href="{{goBackLink}}"
+{% else %}
+    href="#" onClick="history.go(-1); return false;" 
+{% endif %}
+class="grid place-items-center w-[40px] h-[40px] rounded-full bg-primaryColor" >
+    <i class="fal fa-long-arrow-left text-white "></i>
+</a>

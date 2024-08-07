@@ -243,7 +243,7 @@ LOGGING = {
     }, 
     'handlers': {
         'logging_handler':{
-            'class':'pokedex.logger.CustomFileHandler',
+            'class':'logging.handlers.RotatingFileHandler',
             'level': 'WARNING' if PROJECT_ENVIRONMENT == 'production' else 'DEBUG',
             'formatter': 'custom',
             'maxBytes': 31457280,  # 1024 * 1024 * 30B = 30MB

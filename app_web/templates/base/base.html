@@ -5,26 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
+    <link href="{% static 'plugins/bootstrap 5.0.2/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesomepro/css/all.min.css' %}" />
+    <style>
+        a:hover{
+            color:inherit
+        }
+    </style>
     {% tailwind_css %}
     {% block css %}
     {% endblock %}
     <script src="{% static 'js/jquery-3.6.3.min.js' %}"></script>
+    <!-- Select2 Imports must be after the jquery import   -->
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2_bootstrap.min.css' %}" />
+    <script src="{% static 'plugins/select2/js/select2.min.js' %}"></script>
+    
 </head>
-<body>
+<body class="bg-[#f6f8fc]">
+    <div class="container mx-auto flex justify-end ">
+        <a href="{% url 'web:logout' %}" class="mx-2 hover:text-primaryColor p-2">
+            Logout
+        </a>
+    </div>
     {% block content %}
-    {% endblock %}
+    {% endblock %} 
+    <div class="absolute top-[-100px] left-[-60px] z-[-1]">
+        <img src="{% static 'image/pokeball.jpg' %}" alt="pokeball" class="opacity-15 w-[600px] h-[600px]">
+    </div>
 
     {% block modals %}
         <section>
             {% include 'components/modals/modal_general.html' %}
             {% include 'components/modals/modal_rounded.html' %} 
-            
         </section>
     {% endblock %}
     <script src="{% static 'js/global.js' %}"></script>
+    <script src="{% static 'js/numberfy.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap 5.0.2/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'plugins/sweetalert/sweetalert2.all.min.js' %}"></script>
     <script src="{% static 'js/axios.min.js' %}"></script>
     <script src="{% static 'js/api_request.js' %}"></script> 
+    <script src="{% static 'js/modals.js' %}"> </script>
+    <script src="{% static 'plugins/flowbite.js' %}"></script>
     <script>
         setupAxios("{{csrf_token}}")
     </script>

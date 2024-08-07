@@ -1,10 +1,44 @@
 {% extends 'base/base.html' %}
-
+{% load static %}
 {% block content %}
-<div> 
-    <input type="text" placeholder="Search" name="filter_search"/> 
-    <div id="list-container"> </div>
+<div class="container mx-auto p-5"> 
+    <div class="bg-white rounded-xl px-9 pt-6 mb-3 shadow-md flex mx-2 ">
+        <div class="flex gap-3 items-center border-b-4 border-b-primaryColor pb-5">
+            <div>
+                <img src="{% static 'image/active-pokeball.png' %}" alt="icon" class="w-12 h-12">
+            </div>
+            <div class="font-bold text-primaryColor">
+                Pokedex
+            </div>
+        </div> 
+    </div>
+    
+    <div class="flex">
+        <div class="flex-1">
+            <div class="w-full mb-3  mt-6 mx-2 ">   
+                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only ">Search</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="search" name="filter_search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border-0 shadow-md rounded-lg bg-white focus:ring-primaryColor focus:border-primaryColor " 
+                        placeholder="Search Pokemon Name"  />
+
+                        {% url 'web:modal_create_pokemon' as modal_create_pokemon %} 
+                        {% include 'components/buttons/btn_regular.html' with link=modal_create_pokemon isModal=True title='Add Pokemon' icon="fal fa-plus" class='absolute end-2.5 bottom-2.5 bg-primaryColor focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-white ' %}  
+                </div>
+            </div>
+            <div id="list-container"> </div> 
+        </div>
+        <div class="flex-[0.4] p-6 hidden md:block">
+            <img src="{% static 'image/pokemon.png' %}" alt="pokemon" class="rounded-lg">
+        </div>
+    </div>
 </div>
+
+ 
 {% endblock %}
 
 {% block javascript %}
@@ -38,6 +72,7 @@
     }
 
     $(document).on("click", ".delete-pokemon", function(e){
+        e.preventDefault();
         const id = $(this).data('id')
         
         Swal.fire({

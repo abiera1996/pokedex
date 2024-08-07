@@ -1,105 +1,85 @@
 {% load static %}   
-<div class="row mt-5">
-    <div class="col-12 d-flex align-items-center justify-end" >
-        <ul class="pagination">
-            {% if page_data.record_count > 0 %}
-                {% if page_data.has_prev %}
-                <li class="page-item">
-                    <button class="paginate-navigator page-link" data-page="{{page_data.page|add:-1}}">
-                        <
-                    </button> 
-                </li>
-                {% else %}
-                    <li class="page-item disable">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true"><</span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                    </li>
-                {% endif %}
 
-                {% if page_data.pages.0 > 1 %}
-                <li class="page-item disable">
-                    <a class="page-link" href="javascript:void(0)">...</a>
-                </li>
-                {% endif %}
-                {% for i in page_data.pages %}
-                    {% if page_data.page == i %}
-                        <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
-                    {% else %}
-                        <li class="page-item">
-                            <button class="paginate-navigator page-link" data-page="{{i}}">
-                                {{i}}
-                            </button> 
-                        </li>
-                    {% endif %}
-                {% endfor %}
+ 
+{% if page_data.record_count > 0 %} 
 
-                {% with page_data.pages|last as last %}
-                    {% if last < page_data.page_count %}
-                    <li class="page-item disable">
-                        <a class="page-link" href="javascript:void(0)">...</a>
-                    </li> 
-                    {% endif %}
-                {% endwith %}
-
-                {% if page_data.has_next %}
-                <li class="page-item">
-                    <button class="paginate-navigator page-link" data-page="{{page_data.page|add:1}}">
-                        >
-                    </button>
-                </li>
-                {% else %}
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </li>
-                {% endif %}
-            {% endif %}
-        </ul>
-    </div>
-</div>
-
-{% comment %}
-<div class="row align-items-center mt-10">
-    <div class="col-12 col-lg-8">
-        <span class="text-muted">Showing {{page_data.record_from}}&ndash;{{page_data.record_to}} of {{page_data.record_count}} {{paginate_object}}</span>
-    </div>
-    <div class="col-12 col-lg-4 text-right">
-        <div class="paginate-group">
-
-             <!-- <span class="text-muted">Limit:</span>
-            <select name="pagination_limit" class="paginate-limit">
-                <option value='5'  >5</option>
-                <option value='10' selected>10</option>
-                <option value='20' >20</option>
-                <option value='50' >50</option>
-            </select> -->
-
-
-            {% if page_data.has_prev %}
-            <button class="paginate-navigator" data-page="{{page_data.page|add:-1}}">
-                <
-            </button>
+  <nav aria-label="Page navigation example" class="flex items-center justify-end mt-5">
+    <ul class="flex items-center -space-x-px h-10 text-base">
+        {% if page_data.has_prev %}
+        <li class=" "> 
+            <a href="javascript:void(0)" data-page="{{page_data.page|add:-1}}" class="paginate-navigator page-link flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 ">
+              <span class="sr-only">Previous</span>
+              <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+              </svg>
+            </a>
+          </li> 
+        {% else %} 
+            <li class=" disable"> 
+                <a href="javascript:void(0)" aria-label="Previous" class="page-link flex items-center justify-center px-4 h-10 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 ">
+                  <span class="sr-only">Previous</span>
+                  <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                  </svg>
+                </a>
+              </li>
+        {% endif %}
+     
+        {% if page_data.pages.0 > 1 %} 
+        <li  class=" disable">
+            <a href="javascript:void(0)" class="page-link flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 ">
+                ...
+            </a>
+        </li>
+        {% endif %}
+        {% for i in page_data.pages %}
+            {% if page_data.page == i %}
+            <li class=" active">
+                <a href="javascript:void(0)" aria-current="page" class="page-link z-10 flex items-center justify-center px-4 h-10 leading-tight text-white border border-primaryColor bg-primaryColor hover:bg-primaryColor hover:text-white ">
+                    {{ i }}
+                </a>
+              </li> 
             {% else %}
-            <button class="paginate-navigator" disabled>
-                <
-            </button>
+            <li  class=" ">
+                <a  href="javascript:void(0)" data-page="{{i}}" class="paginate-navigator page-link flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 ">
+                    {{i}}
+                </a>
+            </li>
             {% endif %}
-            <span class="paginate-label">{{page_data.page}} of {{page_data.page_count}}</span>
-            {% if page_data.has_next %}
-            <button class="paginate-navigator" data-page="{{page_data.page|add:1}}">
-                >
-            </button>
-            {% else %}
-            <button class="paginate-navigator" disabled>
-                >
-            </button>
-            {% endif %}
-        </div>
-    </div>
-</div>
+        {% endfor %}
 
-{% endcomment %}
+        {% with page_data.pages|last as last %}
+            {% if last < page_data.page_count %}
+            <li  class=" disable">
+                <a href="javascript:void(0)" class="page-link flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 ">
+                    ...
+                </a>
+            </li>
+            {% endif %}
+        {% endwith %}
+
+        {% if page_data.has_next %} 
+          <li class=""> 
+            <a href="javascript:void(0)"  data-page="{{page_data.page|add:1}}" class="paginate-navigator page-link flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 ">
+              <span class="sr-only">Next</span>
+              <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+              </svg>
+            </a>
+          </li>
+        {% else %}
+        <li class=" disable"> 
+            <a href="javascript:void(0)" aria-label="Next" class="page-link flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 ">
+              <span class="sr-only">Next</span>
+              <svg class="w-3 h-3 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+              </svg>
+            </a>
+          </li>
+        
+        {% endif %}
+     
+    </ul>
+  </nav>
+  {% endif %}
+ 

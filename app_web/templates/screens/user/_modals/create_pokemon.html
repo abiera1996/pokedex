@@ -1,0 +1,123 @@
+{% load custom_filters %} 
+<div class="modal-header border-none">
+    <div class="modal-title ">
+        <h5 class="font-semibold text-xl text-black" id="staticBackdropLabel">
+            {% if id %}
+            Update
+            {% else %} 
+            Create New
+        {% endif %}  Pokemon
+        </h5>
+        <label class="text-xs">
+            Complete the item information.
+        </label>
+    </div>
+    
+    <button type="button" class="btn-close text-black" data-bs-dismiss="modal" aria-label="Close"> </button>
+</div>
+<div class="modal-body p-0">
+    <form id="form-add-data"  
+        {% if id %}
+            action="{% url 'web:update_pokemon_request' id %}"
+            method="post"
+        {% else %}
+            action="{% url 'web:create_pokemon_request' %}"
+            method="post"
+        {% endif %} 
+        >
+        <div class="bg-white py-3 px-4">
+            <div class="flex items-center">
+                
+                <label for="default-radio-2" class="text-sm font-semibold">POKEMON INFO</label>
+            </div>   
+            <div id="user__patient_information__profile_picture" class="mt-2">
+                {% include 'components/inputs/input_image2.html' with labelText="Upload a pokemon picture. Max size 2MB" imageId="image2" btnId="btn-image2" name="photo" value=details.photo %}
+            </div> 
+            <div class="mt-2 col-lg-12">
+                {% include 'components/inputs/input_with_label.html' with label="Name" name="name" labelClass='text-gray-600 text-sm' class='my-1' type="text" classBorder="border-gray-400" required=True value=details.name  %}
+            </div>
+            <div class="row">
+                <div class="mt-2 col-lg-6">
+                    {% include 'components/inputs/input_with_label.html' with label="Heigh" name="height" id="height" number_validation="decimal" labelClass='text-gray-600 text-sm' class='my-1' type="text" classBorder="border-gray-400" required=True value=details.height  %}
+                </div>
+                <div class="mt-2 col-lg-6">
+                    {% include 'components/inputs/input_with_label.html' with label="Weight" name="weight" id="weight" number_validation="decimal" labelClass='text-gray-600 text-sm' class='my-1' type="text" classBorder="border-gray-400" required=True value=details.weight  %}
+                </div>
+            </div>
+
+            <div class="col-xl-12">
+                <div class="mt-2"> 
+                    {% url 'web:search_type' as search_type %}
+                    {% include 'components/inputs/input_with_label.html' with label="Types" name="types" placeholder="Select types" modalParent=True labelClass='text-gray-600 text-sm' class='my-1' url=search_type type="dropdown_search" id="types" classBorder="border-gray-400" multiple=True required=True  %}
+                </div>
+            </div>
+            <div class="col-xl-12">
+                <div class="mt-2"> 
+                    {% url 'web:search_ability' as search_ability %}
+                    {% include 'components/inputs/input_with_label.html' with label="Abilities" name="abilities" placeholder="Select abilities" modalParent=True labelClass='text-gray-600 text-sm' class='my-1' url=search_ability type="dropdown_search" id="abilities" classBorder="border-gray-400" multiple=True required=True  %}
+                </div>
+            </div>
+            <div class="ml-3 flex-1 flex items-end justify-end mt-3 mb-4">
+                <div class="mr-2">
+                    {% include 'components/buttons/btn_regular.html' with title='CANCEL' class='bg-[#ebebeb] text-gray-700 rounded-md ' attribute='data-bs-dismiss="modal"' %}
+                </div>
+                <div>
+                    {% if id %}
+                        {% include 'components/buttons/btn_regular.html' with title='UPDATE VEHICLE' id='add-item-consumable' type="submit"  class='bg-primaryColor text-white rounded-md ' %}
+                    {% else %}
+                        {% include 'components/buttons/btn_regular.html' with title='ONBOARD VEHICLE' id='add-item-consumable' type="submit"  class='bg-primaryColor text-white rounded-md ' %}
+                    {% endif %}
+                    
+                </div>
+               
+            </div>
+        </div>  
+    </form> 
+</div>  
+
+<script>
+    
+    API.formRequest(
+        '#form-add-data',
+        extended_data={},
+        processData=() => {},
+        checkValidation=(form_data) => {return true},
+        callback=(response)=>{
+            console.log(response)
+            if (response.status != 400) {
+                Swal.fire({
+                    icon: [200,201].includes(response.status)?'success':'error',
+                    title:  'Message', 
+                    text: response.message || response.data?.message, 
+                }).then(()=>{
+                    if([200,201].includes(response.status)){  
+                        {% if data.is_srf %}
+                            $('#branch_2').trigger('change')
+                            setTimeout(() => {
+                                $('#requesting_unit').val(response.data.id).trigger('change');
+                            }, 500);
+                            $("#modal_rounded").modal('hide');
+                        {% else %}
+                            location.reload() 
+                        {% endif %}
+                    } 
+                })
+            }
+        },
+        isMultiForm=true
+    )
+
+    {% if id %}
+        $('#types').html(`
+            {% for type in details.types.all %}
+                <option value="{{type.pk}}" selected>{{type.name}}</option>
+            {% endfor %}
+        `).trigger('change')   
+
+        $('#abilities').html(`
+            {% for ability in details.abilities.all %}
+                <option value="{{ability.pk}}" selected>{{ability.name}}</option>
+            {% endfor %}
+        `).trigger('change')   
+    {% endif %}
+</script> 

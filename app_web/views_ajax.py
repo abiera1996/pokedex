@@ -153,14 +153,14 @@ def create_pokemon_request(request):
 
 
 @require_logged()
-@require_http_methods(['PATCH'])
-def update_pokemon_request(request, id):
+@require_http_methods(['POST'])
+def update_pokemon_request(request, id): 
     try:
         data = decode_request_body(request.body)
     except Exception as e:
-        data = request.PATCH
+        data = request.POST
     files = request.FILES
-
+    
     pokemon = helpers.get_or_none(Pokemon, pk=id) 
     if pokemon is None:
         return JsonResponse({
@@ -191,7 +191,7 @@ def update_pokemon_request(request, id):
             pokemon.save() 
         if data.get('types'):
             types = Type.objects.filter(
-                pk__in=data.get('types',[])
+                pk__in=data.getlist('types',[])
             )
             pokemon.types.clear()
             pokemon.types.add(*types)
@@ -199,7 +199,7 @@ def update_pokemon_request(request, id):
             
         if data.get('abilities'):
             abilities = Ability.objects.filter(
-                pk__in=data.get('abilities',[])
+                pk__in=data.getlist('abilities',[])
             )
             pokemon.abilities.clear()
             pokemon.abilities.add(*abilities)
@@ -222,3 +222,64 @@ def delete_pokemon_request(request, id):
     return JsonResponse({
         'message': 'Successfully Deleted.'
     }, status=200)
+
+
+
+@require_http_methods(['GET'])
+def search_type(request):
+    data = request.GET
+    json_data = [] 
+
+    queryset = Type.objects.all().order_by('name')
+ 
+    if data.get('search'):
+        search = data.get('search') 
+        queryset = queryset.filter(name__icontains=search)
+
+    queryset = helpers.Paginator(queryset).paginate(
+        page=data.get('page', 1),
+        limit=data.get('limit', 10)
+    )
+
+    for details in queryset.get('data', None):
+        json_data.append({
+            'id': details.pk,
+            'text': details.name
+        })
+
+    context = {
+        'data': json_data,
+        'page_count': queryset.get('page_count', None)
+    }
+
+    return JsonResponse(context, status=200)
+
+
+@require_http_methods(['GET'])
+def search_ability(request):
+    data = request.GET
+    json_data = [] 
+
+    queryset = Ability.objects.all().order_by('name')
+ 
+    if data.get('search'):
+        search = data.get('search') 
+        queryset = queryset.filter(name__icontains=search)
+
+    queryset = helpers.Paginator(queryset).paginate(
+        page=data.get('page', 1),
+        limit=data.get('limit', 10)
+    )
+
+    for details in queryset.get('data', None):
+        json_data.append({
+            'id': details.pk,
+            'text': details.name
+        })
+
+    context = {
+        'data': json_data,
+        'page_count': queryset.get('page_count', None)
+    }
+
+    return JsonResponse(context, status=200)

@@ -1,0 +1,50 @@
+{% comment %}
+    Variables
+    - id 
+    - class
+    - title:string
+    - icon:string
+    - bgColor
+    - textColor
+    - size:string (xs, sm, md, lg) default md,
+    - imageContent
+    - imageClass
+    - link
+    - isModal (True, False)
+    - modalSize modal-{size}
+    - modalType (modal_rounded, modal_general)
+    - attribute
+    - type: submit,button,link default link
+{% endcomment %}
+
+{% if type == 'button' or type == 'submit' or type == 'reset'  %}
+    <button type="{{type}}" 
+{% else %} 
+    <a href="{% if link %}{{link}}{% else %}#{% endif %}"
+{% endif %}
+
+    id="{{id}}" 
+    {% if isModal %} 
+        data-open-modal 
+        data-modal-size="{{modalSize}}"
+        data-modal-type="{{modalType}}"
+    {% endif %}
+    class=" px-3 py-2 {{class}} flex items-center justify-center text-{% if size %}{{size}}{% else %}md{% endif %}"
+    style="
+        {% if bgColor %}background:{{bgColor}};{% endif %}
+        {% if textColor %}color:{{textColor}};{% endif %}
+    " {{attribute}}> 
+    {% if imageContent %}
+        <img src="{{imageContent}}" class="object-contain {{imageClass}}" />
+    {% else %}
+        <i class="{{icon}}"></i>
+        {% if title %}
+        <span class="{% if icon %}ml-3{% endif %}">{{title}}</span>
+        {% endif %}
+    {% endif %}
+    
+{% if type == 'button' or type == 'submit' %}
+</button>
+{% else %} 
+    </a>
+{% endif %}

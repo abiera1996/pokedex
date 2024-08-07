@@ -1,0 +1,39 @@
+{% comment %}
+    Variables
+    - id 
+    - class
+    - title:string
+    - icon:string
+    - size:string (xs, sm, md, lg) default md
+    - color:string 
+    - style
+    - link
+    - isModal (True, False)
+    - modalSize modal-{size}
+    - modalType (modal_rounded, modal_general)
+    - target (_blank, _self, _parent, _top, framename)
+{% endcomment %}
+
+
+<a id="{{id}}"
+    {% if isModal %} 
+        data-open-modal 
+        data-modal-size="{{modalSize}}"
+        data-modal-type="{{modalType}}"
+    {% endif %}
+    {% if dismissModal %}
+        data-bs-dismiss="modal"
+    {% endif %}
+    href="{% if link %}{{link}}{% else %}#{% endif %}" target="{{target}}" class="{{class}} bg-transparent text-primaryColor 
+    {% if padding %}{{padding}}{% else %}px-3 py-2{% endif %}
+    flex items-center border-1 border-primaryColor justify-center
+text-{% if size %}{{size}}{% else %}md{% endif %}
+" 
+style="
+{% if color %}border-color:{{color}};{% endif %}
+{% if color %}color:{{color}};{% endif %}
+{{style}}
+"> 
+    <i class="{{icon}}"></i>
+    <span class="{% if icon %}ml-3{% endif %}">{{title}}</span>
+</a>

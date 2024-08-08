@@ -86,7 +86,7 @@
         }).then((result) => {
         if (result.isConfirmed) {
             API.makeRequest(
-                `/ajax/delete-pokemon-request/${id}`,
+                `/ajax/pokemon-request/${id}`,
                 'delete',
                 {},
                 processData=() => {},

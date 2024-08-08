@@ -2,8 +2,7 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-import json
-from app_web.views_ajax import login_request
+import json 
 
 User = get_user_model()
 
@@ -33,7 +32,7 @@ class LoginRequestTestCase(TestCase):
         }), content_type='application/json')
         
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json()['message'], 'Username\\Email or password is incorrect.')
+        self.assertEqual(response.json()['message'], 'Username/Email or password is incorrect.')
 
     def test_login_with_invalid_email(self):
         # Simulate a POST request with invalid email
@@ -43,11 +42,11 @@ class LoginRequestTestCase(TestCase):
         }), content_type='application/json')
         
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json()['message'], 'Username\\Email or password is incorrect.')
+        self.assertEqual(response.json()['message'], 'Username/Email or password is incorrect.')
 
     def test_login_with_invalid_json(self):
         # Simulate a POST request with invalid JSON
         response = self.client.post(reverse('web:login_request'), data='invalidjson', content_type='application/json')
         
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json()['message'], 'Username\\Email or password is incorrect.')
+        self.assertEqual(response.json()['message'], 'Username/Email or password is incorrect.')

@@ -55,7 +55,7 @@
                 id="{{id}}" data-mdb-toggle-button="false"
             {% endif %}>
                 {% if iconLeft %}
-                    <div class='grid place-items-center px-3 pr-[10px]'>
+                    <div class='grid place-items-center px-3 pr-3'>
                         <i class="{{iconLeft}}"></i>
                     </div>
                 {% endif %}
@@ -191,6 +191,9 @@
                                 closeOnSelect: true,
                                 allowClear: {% if allowClear %} true{% else %} false{% endif %},
                                 multiple: {% if multiple %} true {% else %} false {% endif %},
+                                {% if modalParent %}
+                                    dropdownParent: $("#modal_rounded"),
+                                {% endif %}
                                 ajax: {
                                     url: "{{url}}",
                                     dataType: 'json',

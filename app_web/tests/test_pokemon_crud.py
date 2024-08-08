@@ -48,11 +48,11 @@ class PokemonRequestTestCase(TestCase):
         
         self.assertEqual(response.status_code, 400)
         self.assertIn('error', response.json())
-        self.assertEqual(response.json()['error']['name'], 'Pokemon name already exist!')
+        self.assertEqual(response.json()['error']['name'], 'Pokemon name already exists!')
 
     def test_update_pokemon_request(self):
         pokemon = Pokemon.objects.create(name='Bulbasaur', height=1.0, weight=20.0)
-        url = reverse('web:update_pokemon_request', args=[pokemon.pk])
+        url = reverse('web:update_or_delete_pokemon_request', args=[pokemon.pk])
         data = {
             'name': 'Ivysaur',
             'height': 1.5,
@@ -73,7 +73,7 @@ class PokemonRequestTestCase(TestCase):
     def test_update_pokemon_with_existing_name(self):
         Pokemon.objects.create(name='Charmander', height=1.0, weight=20.0)
         pokemon = Pokemon.objects.create(name='Bulbasaur', height=1.0, weight=20.0)
-        url = reverse('web:update_pokemon_request', args=[pokemon.pk])
+        url = reverse('web:update_or_delete_pokemon_request', args=[pokemon.pk])
         data = {
             'name': 'Charmander',
             'height': 1.5,
@@ -83,19 +83,19 @@ class PokemonRequestTestCase(TestCase):
         
         self.assertEqual(response.status_code, 400)
         self.assertIn('error', response.json())
-        self.assertEqual(response.json()['error']['name'], 'Pokemon name already exist!')
+        self.assertEqual(response.json()['error']['name'], 'Pokemon name already exists!')
 
     def test_delete_pokemon_request(self):
         pokemon = Pokemon.objects.create(name='Squirtle', height=1.0, weight=20.0)
-        url = reverse('web:delete_pokemon_request', args=[pokemon.pk])
+        url = reverse('web:update_or_delete_pokemon_request', args=[pokemon.pk])
         response = self.client.delete(url)
         
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()['message'], 'Successfully Deleted.')
+        self.assertEqual(response.json()['message'], 'Successfully deleted.')
         self.assertFalse(Pokemon.objects.filter(pk=pokemon.pk).exists())
 
     def test_delete_nonexistent_pokemon(self):
-        url = reverse('web:delete_pokemon_request', args=[999])  # Assuming 999 does not exist
+        url = reverse('web:update_or_delete_pokemon_request', args=[999])  # Assuming 999 does not exist
         response = self.client.delete(url)
         
         self.assertEqual(response.status_code, 404)

@@ -21,7 +21,7 @@ class RegisterRequestTestCase(TestCase):
             'last_name': 'Last'
         }), content_type='application/json') 
         self.assertEqual(response.status_code, 200)  
-        self.assertEqual(response.json()['message'], 'Successfully register.')
+        self.assertEqual(response.json()['message'], 'Successfully registered.')
         self.assertTrue(User.objects.filter(username='newuser').exists())
 
     def test_register_with_password_mismatch(self):

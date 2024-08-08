@@ -18,7 +18,7 @@
 <div class="modal-body p-0">
     <form id="form-add-data"  
         {% if id %}
-            action="{% url 'web:update_pokemon_request' id %}"
+            action="{% url 'web:update_or_delete_pokemon_request' id %}"
             method="post"
         {% else %}
             action="{% url 'web:create_pokemon_request' %}"

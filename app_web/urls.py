@@ -11,14 +11,12 @@ urlpatterns = [
 ]   
 
 urlpatterns_ajax = [
-    path('ajax/login-request', views_ajax.login_request, name='login_request'),
-    path('ajax/register-request', views_ajax.register_request, name='register_request'),
-    path('ajax/create-pokemon-request', views_ajax.create_pokemon_request, name='create_pokemon_request'), 
-    path('ajax/update-pokemon-request/<str:id>', views_ajax.update_pokemon_request, name='update_pokemon_request'),
-    path('ajax/delete-pokemon-request/<str:id>', views_ajax.delete_pokemon_request, name='delete_pokemon_request'),
-
-    path('ajax/search-ability', views_ajax.search_ability, name='search_ability'),
-    path('ajax/search-type', views_ajax.search_type, name='search_type'),
+    path('ajax/pokemon-request', views_ajax.PokemonRequestView.as_view(), name='create_pokemon_request'),
+    path('ajax/pokemon-request/<str:id>', views_ajax.PokemonRequestView.as_view(), name='update_or_delete_pokemon_request'),
+    path('ajax/login-request', views_ajax.LoginRequestView.as_view(), name='login_request'),
+    path('ajax/register-request', views_ajax.RegisterRequestView.as_view(), name='register_request'),
+    path('ajax/search-ability', views_ajax.SearchAbilityView.as_view(), name='search_ability'),
+    path('ajax/search-type', views_ajax.SearchTypeView.as_view(), name='search_type'),
 ]
 
 urlpatterns_subpage = [

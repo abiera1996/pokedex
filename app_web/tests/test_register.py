@@ -63,4 +63,4 @@ class RegisterRequestTestCase(TestCase):
             'last_name': 'Last'
         }), content_type='application/json') 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json()['error']['username'], 'Username already exist!') 
+        self.assertEqual(response.json()['error']['username'][0], 'Username already exist!') 

@@ -57,11 +57,11 @@ class PokemonRequestTestCase(TestCase):
             'name': 'Ivysaur',
             'height': 1.5,
             'weight': 25.0,
-            'types': self.type1.pk,
-            'abilities': self.ability1.pk
+            'types': [self.type1.pk],
+            'abilities': [self.ability1.pk]
         }
         photo = SimpleUploadedFile("photo.jpg", b"file_content", content_type="image/jpeg") 
-        response = self.client.post(url, json.dumps(data), format='multipart', content_type='application/json', **{'photo': photo})
+        response = self.client.post(url, data, format='multipart', **{'photo': photo})
         
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['message'], 'Successfully updated.')

@@ -220,7 +220,7 @@ APPEND_SLASH = False
 
 # ----------- Configs ------------------
 CORS_ALLOW_ALL_ORIGINS = False 
-PROJECT_ENVIRONMENT = 'dev'
+PROJECT_ENVIRONMENT = 'production'
 
 try:
     from pokedex.local import *
@@ -258,7 +258,7 @@ LOGGING = {
     },
     'loggers': {
         'django': {
-            'handlers': ['logging_handler', 'console'],
+            'handlers': ['logging_handler'],
             'level': 'WARNING' if PROJECT_ENVIRONMENT == 'production' else 'DEBUG',
             'propagate': True,
         },

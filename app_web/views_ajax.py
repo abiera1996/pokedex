@@ -108,7 +108,7 @@ def create_pokemon_request(request):
     except Exception as e:
         data = request.POST
     files = request.FILES
-
+    
     errors = {} 
     if data.get('name', ''):  
         is_existing = Pokemon.objects.filter( 
@@ -158,7 +158,8 @@ def update_pokemon_request(request, id):
     try:
         data = decode_request_body(request.body)
     except Exception as e:
-        data = request.POST
+        data = request.POST 
+
     files = request.FILES
     
     pokemon = helpers.get_or_none(Pokemon, pk=id) 
